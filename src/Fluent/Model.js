@@ -94,18 +94,17 @@ export default stampit({
         throw new Error('No remote connector was defined. Please define it using Fluent.config()')
       }
 
-      this.remoteCon.token = this.remoteCon.token || token
+      const remoteConnector = this.getConnector(connectors, 'remote')
+
+      this.config.remote.token = token || this.config.remote.token
 
       if (pullForm) {
-        this.remoteCon.pullForm = pullForm;
+        this.config.remote = pullForm || this.config.remote.pullForm;
       }
-
-
-      const remoteConnector = this.getConnector(connectors, 'remote')
 
       if (remoteConnector) {
         return remoteConnector.connector({
-          remoteConnection: this.remoteCon
+          remoteConnection: this.config.remote
         })
       }
 
