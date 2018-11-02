@@ -1,7 +1,6 @@
 import stampit from '@stamp/it';
-import Utilities from 'utilities';
+import Utilities from './utilities';
 import Collection from './Collection';
-// import Fluent from './Fluent';
 
 export default stampit({
   init({ name, remoteConnection }) {

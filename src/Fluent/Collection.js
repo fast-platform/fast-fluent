@@ -1,5 +1,5 @@
 import stampit from '@stamp/it';
-import Utilities from 'utilities';
+import Utilities from './utilities';
 
 export default stampit({
   init(data) {
@@ -146,7 +146,7 @@ export default stampit({
         }
         let val = e;
         if (e instanceof Object) {
-          let extract = this.getFromPath(e, path, undefined)
+          let extract = Utilities.getFromPath(e, path, undefined)
           if (extract.value) {
             val = extract.value
           }
@@ -157,40 +157,6 @@ export default stampit({
     },
     count() {
       return this.data.length
-    },
-    getFromPath(obj, path, def) {
-      let _path = path;
-
-      if (path.includes(' as ')) {
-        path = path.split(' as ');
-        _path = path[0];
-      }
-
-      let assignedName = this.get(() => {
-        return Array.isArray(path) && path[1].trim();
-      }, undefined);
-
-      let fullPath = _path
-        .replace(/\[/g, '.')
-        .replace(/]/g, '')
-        .split('.')
-        .filter(Boolean)
-        .map(e => e.trim());
-
-      function everyFunc(step) {
-        return !(step && (obj = obj[step]) === undefined);
-      }
-
-      let result = fullPath.every(everyFunc) ? obj : def;
-
-      return { label: assignedName || _path, value: result };
-    },
-    get(fn, def) {
-      try {
-        return fn();
-      } catch (e) {
-        return def;
-      }
     },
     isFunction(functionToCheck) {
       return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
