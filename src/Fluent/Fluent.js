@@ -87,11 +87,13 @@ const Fluent = stampit({
       }
     },
     getConfig() {
-      return {
-        REMOTE_CONNECTORS: _FLUENT_REMOTE_CONNECTORS,
-        LOCAL_CONNECTORS: _FLUENT_LOCAL_CONNECTORS,
-        MERGE_CONNECTORS: _FLUENT_MERGE_CONNECTORS
-      };
+      if ((typeof window !== 'undefined') && window) {
+        return window._FLUENT_
+      }
+
+      if ((typeof global !== 'undefined') && global) {
+        return global._FLUENT_
+      }
     }
   }
 })();
