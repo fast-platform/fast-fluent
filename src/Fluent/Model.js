@@ -6,7 +6,7 @@ export default stampit({
     name: 'baseModel',
     config: {
       remote: {
-        path: '/myRemote/model',
+        path: undefined,
         token: undefined,
         pullForm: false
       },
@@ -99,7 +99,7 @@ export default stampit({
       this.config.remote.token = token || this.config.remote.token
 
       if (pullForm) {
-        this.config.remote = pullForm || this.config.remote.pullForm;
+        this.config.remote.pullForm = pullForm || this.config.remote.pullForm;
       }
 
       if (remoteConnector) {
