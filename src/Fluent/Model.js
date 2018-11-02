@@ -104,7 +104,8 @@ export default stampit({
 
       if (remoteConnector) {
         return remoteConnector.connector({
-          remoteConnection: this.config.remote
+          remoteConnection: this.config.remote,
+          connector: remoteConnector
         })
       }
 
@@ -125,7 +126,7 @@ export default stampit({
       const localConnector = this.getConnector(connectors, 'local')
 
       if (localConnector) {
-        return localConnector.connector({ name: this.name })
+        return localConnector.connector({ name: this.name, connector: localConnector })
       }
 
       throw new Error('No default local connector found. Please assign one as your default in Fluent.config')
@@ -149,7 +150,7 @@ export default stampit({
       const mergeConnector = this.getConnector(connectors, 'merge')
 
       if (mergeConnector) {
-        return mergeConnector.connector({ local, remote, name: this.name })
+        return mergeConnector.connector({ local, remote, name: this.name, connector: mergeConnector })
       }
 
       throw new Error('No default merge connector found. Please assign one as your default in Fluent.config')

@@ -3,9 +3,13 @@ import Utilities from './utilities';
 import Collection from './Collection';
 
 export default stampit({
-  init({ name, remoteConnection }) {
+  init({ name, remoteConnection, connector }) {
     if (!name && !remoteConnection) {
       throw new Error('Model must have a name or path');
+    }
+
+    if (!connector) {
+      throw new Error('Model must have a connector. Please register one using Fluent.config');
     }
     this.name = name || this.name;
     this.remoteConnection = remoteConnection || this.remoteConnection;
