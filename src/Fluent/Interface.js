@@ -13,6 +13,7 @@ export default stampit({
     }
     this.name = name || this.name;
     this.remoteConnection = remoteConnection || this.remoteConnection;
+    this.connector = connector || this.connector;
     this.chainReference = [];
     this.whereArray = [];
     this.orWhereArray = [];
