@@ -26,6 +26,7 @@ export default stampit({
     this.populate = [];
     this.chunk = null;
     this.pullSize = null;
+    this.owner = undefined;
   },
   properties: {
     operators: [
@@ -113,10 +114,12 @@ export default stampit({
       throw new Error("findAndRemove() method not implemented");
     },
     owner(user) {
-      throw new Error("owner() method not implemented");
+      this.chainReference.push({ method: "owner", args: user });
+      this.owner = user;
+      return this;
     },
     own(user) {
-      throw new Error("own() method not implemented");
+      return this.owner(user);
     },
     /**
      * Executes the Get() method and
