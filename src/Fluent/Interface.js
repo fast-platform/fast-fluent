@@ -263,6 +263,7 @@ export default stampit({
      * @returns {Model} Fluent Model
      */
     orWhere(...args) {
+      this.chainReference.push({ method: "orWhere", args: args });
       args = Array.isArray(args[0]) ? args : [args];
       args.forEach(arg => {
         if (arg.length !== 3) {
@@ -283,6 +284,7 @@ export default stampit({
      * @returns {Model} Fluent Model
      */
     limit(limit) {
+      this.chainReference.push({ method: "limit", args: limit });
       this.limitNumber = limit;
       return this;
     },
@@ -301,6 +303,7 @@ export default stampit({
      * @returns {Array}
      */
     async pluck(keyPath) {
+      this.chainReference.push({ method: "pluck", args: keyPath });
       let data = await this.get();
 
       data = data.map(e => {
@@ -317,6 +320,7 @@ export default stampit({
      * @param {*} args
      */
     orderBy(...args) {
+      this.chainReference.push({ method: "orderBy", args: args });
       this.orderByArray = args;
       return this;
     },
