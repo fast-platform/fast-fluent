@@ -1,15 +1,17 @@
-import stampit from '@stamp/it';
-import Utilities from './utilities';
-import Collection from './Collection';
+import stampit from "@stamp/it";
+import Utilities from "./utilities";
+import Collection from "./Collection";
 
 export default stampit({
   init({ name, remoteConnection, connector }) {
     if (!name && !remoteConnection) {
-      throw new Error('Model must have a name or path');
+      throw new Error("Model must have a name or path");
     }
 
     if (!connector) {
-      throw new Error('Model must have a connector. Please register one using Fluent.config');
+      throw new Error(
+        "Model must have a connector. Please register one using Fluent.config"
+      );
     }
     this.name = name || this.name;
     this.remoteConnection = remoteConnection || this.remoteConnection;
@@ -27,18 +29,20 @@ export default stampit({
   },
   properties: {
     operators: [
-      '=',
-      '<',
-      '>',
-      '<=',
-      '>=',
-      '<>',
-      '!=',
-      'like',
-      'regexp',
-      'startsWith',
-      'endsWith',
-      'contains'
+      "=",
+      "<",
+      ">",
+      "<=",
+      ">=",
+      "<>",
+      "!=",
+      "in",
+      "nin",
+      "like",
+      "regexp",
+      "startsWith",
+      "endsWith",
+      "contains"
     ]
   },
   methods: {
@@ -46,73 +50,73 @@ export default stampit({
      *
      */
     get() {
-      throw new Error('get() method not implemented');
+      throw new Error("get() method not implemented");
     },
     /**
      *
      */
     all() {
-      throw new Error('all() method not implemented');
+      throw new Error("all() method not implemented");
     },
     /**
      *
      */
     find(id) {
-      throw new Error('find() method not implemented');
+      throw new Error("find() method not implemented");
     },
     /**
      *
      */
     findOne() {
-      throw new Error('findOne() method not implemented');
+      throw new Error("findOne() method not implemented");
     },
     /**
      *
      */
     remove() {
-      throw new Error('remove() method not implemented');
+      throw new Error("remove() method not implemented");
     },
     /**
      *
      */
     softDelete() {
-      throw new Error('softDelete() method not implemented');
+      throw new Error("softDelete() method not implemented");
     },
     /**
      *
      */
     insert() {
-      throw new Error('insert() method not implemented');
+      throw new Error("insert() method not implemented");
     },
     /**
      *
      */
     update() {
-      throw new Error('update() method not implemented');
+      throw new Error("update() method not implemented");
     },
     /**
      *
      */
     clear() {
-      throw new Error('clear() method not implemented');
+      throw new Error("clear() method not implemented");
     },
     /**
      *
      */
     updateOrCreate() {
-      throw new Error('updateOrCreate() method not implemented');
+      throw new Error("updateOrCreate() method not implemented");
     },
     /**
      *
      */
     findAndRemove() {
-      throw new Error('findAndRemove() method not implemented');
+      throw new Error("findAndRemove() method not implemented");
     },
     owner(user) {
-      throw new Error('owner() method not implemented');
+      throw new Error("owner() method not implemented");
     },
     own(user) {
-      throw new Error('own() method not implemented');
+      throw new Error("own() method not implemented");
     },
     /**
      * Executes the Get() method and
@@ -135,7 +139,7 @@ export default stampit({
       let data = await this.get();
 
       if (!Array.isArray(data)) {
-        throw new Error('Collect method only accepts arrays of data');
+        throw new Error("Collect method only accepts arrays of data");
       }
 
       return Collection(data);
@@ -149,7 +153,7 @@ export default stampit({
      */
     select(...columns) {
       columns = this.prepareInput(columns);
-      this.chainReference.push({ method: 'select', args: columns });
+      this.chainReference.push({ method: "select", args: columns });
       this.selectArray = this.selectArray
         .concat(columns)
         .filter((elem, pos, arr) => {
@@ -177,7 +181,7 @@ export default stampit({
 
             let value = Utilities.get(() => extract.value, undefined);
 
-            if (typeof value !== 'undefined') {
+            if (typeof value !== "undefined") {
               newElement[extract.label] = extract.value;
             }
           });
@@ -195,7 +199,7 @@ export default stampit({
      * @returns {Model} Fluent Model
      */
     offset(offset) {
-      this.chainReference.push({ method: 'offset', args: offset });
+      this.chainReference.push({ method: "offset", args: offset });
       this.offsetNumber = offset;
       return this;
     },
@@ -214,15 +218,15 @@ export default stampit({
      * @returns {Model} Fluent Model
      */
     where(...args) {
-      this.chainReference.push({ method: 'where', args: args });
+      this.chainReference.push({ method: "where", args: args });
       this.whereArray = [];
       args = Array.isArray(args[0]) ? args : [args];
       args.forEach(arg => {
         if (arg.length !== 3) {
           throw new Error(
             'There where clouse is not properly formatted, expecting: ["attribute", "operator","value"] but got "' +
-            JSON.stringify(arg) +
-            '" '
+              JSON.stringify(arg) +
+              '" '
           );
         }
         this.whereArray.push(arg);
@@ -237,14 +241,14 @@ export default stampit({
      * @returns {Model} Fluent Model
      */
     andWhere(...args) {
-      this.chainReference.push({ method: 'andWhere', args: args });
+      this.chainReference.push({ method: "andWhere", args: args });
       args = Array.isArray(args[0]) ? args : [args];
       args.forEach(arg => {
         if (arg.length !== 3) {
           throw new Error(
             'There where clouse is not properly formatted, expecting: ["attribute", "operator","value"] but got "' +
-            JSON.stringify(arg) +
-            '" '
+              JSON.stringify(arg) +
+              '" '
           );
         }
         this.whereArray.push(arg);
@@ -264,8 +268,8 @@ export default stampit({
         if (arg.length !== 3) {
           throw new Error(
             'There orWhere clouse is not properly formatted, expecting: ["attribute", "operator","value"] but got "' +
-            JSON.stringify(arg) +
-            '" '
+              JSON.stringify(arg) +
+              '" '
           );
         }
         this.orWhereArray.push(arg);
@@ -302,7 +306,7 @@ export default stampit({
       data = data.map(e => {
         let extracted = Utilities.getFromPath(e, keyPath, undefined);
 
-        if (typeof extracted.value !== 'undefined') {
+        if (typeof extracted.value !== "undefined") {
           return extracted.value;
         }
       });
@@ -330,12 +334,12 @@ export default stampit({
 
       if (
         this.selectArray.length > 0 &&
-        (field.includes('.') || field.includes('['))
+        (field.includes(".") || field.includes("["))
       ) {
         throw new Error(
           'Cannot orderBy nested attribute "' +
-          field +
-          '" when using Select. You must rename the attribute'
+            field +
+            '" when using Select. You must rename the attribute'
         );
       }
 
@@ -343,28 +347,28 @@ export default stampit({
       let type = this.orderByArray[2];
 
       if (!type) {
-        type = 'string';
+        type = "string";
       }
 
       _data = _data.sort((a, b) => {
         let A = Utilities.getFromPath(a, field, undefined).value;
         let B = Utilities.getFromPath(b, field, undefined).value;
 
-        if (typeof A === 'undefined' || typeof B === 'undefined') {
+        if (typeof A === "undefined" || typeof B === "undefined") {
           throw new Error(
             'Cannot order by property "' +
-            field +
-            '" not all values have this property'
+              field +
+              '" not all values have this property'
           );
         }
         // For default order and numbers
-        if (type.includes('string') || type.includes('number')) {
-          if (order === 'asc') {
+        if (type.includes("string") || type.includes("number")) {
+          if (order === "asc") {
             return A > B ? 1 : A < B ? -1 : 0;
           }
           return A > B ? -1 : A < B ? 1 : 0;
-        } else if (type.includes('date')) {
-          if (order === 'asc') {
+        } else if (type.includes("date")) {
+          if (order === "asc") {
             return new Date(A) - new Date(B);
           }
           return new Date(B) - new Date(A);
@@ -380,7 +384,7 @@ export default stampit({
       let cols = [];
 
       input.forEach(item => {
-        let value = Array.isArray(item) ? item : item.split(',');
+        let value = Array.isArray(item) ? item : item.split(",");
 
         value = value.map(e => {
           return e.trim();
@@ -395,24 +399,27 @@ export default stampit({
       return cols;
     },
     async ArrayInsert(dataArray, options) {
-      let initial = 1
-      const length = dataArray.length
+      let initial = 1;
+      const length = dataArray.length;
       for (const element of dataArray) {
         if (options && options.showProgress) {
-          console.log(`Inserting ${initial} of ${length}`)
+          console.log(`Inserting ${initial} of ${length}`);
         }
         try {
-          const a = await this.insert(element, options)
+          const a = await this.insert(element, options);
           if (options && options.showProgress) {
-            console.log(`Element ${initial} inserted`)
+            console.log(`Element ${initial} inserted`);
           }
           initial++;
         } catch (e) {
-          console.log(`ERROR - Element ${initial} - ${JSON.stringify(element)} could not be inserted`)
-          console.log(e)
+          console.log(
+            `ERROR - Element ${initial} - ${JSON.stringify(
+              element
+            )} could not be inserted`
+          );
+          console.log(e);
           initial++;
         }
-
       }
     }
   }
