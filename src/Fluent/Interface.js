@@ -26,7 +26,7 @@ export default stampit({
     this.populate = [];
     this.chunk = null;
     this.pullSize = null;
-    this.owner = undefined;
+    this.ownerEmail = undefined;
   },
   properties: {
     operators: [
@@ -115,7 +115,7 @@ export default stampit({
     },
     owner(user) {
       this.chainReference.push({ method: "owner", args: user });
-      this.owner = user;
+      this.ownerEmail = user;
       return this;
     },
     own(user) {
