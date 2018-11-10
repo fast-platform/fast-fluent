@@ -1,6 +1,6 @@
 {
   "name": "fast-fluent",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Readable query Interface for Local and Remote storage providers",
   "main": "lib/fast-fluent.min.js",
   "directories": {

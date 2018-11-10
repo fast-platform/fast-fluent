@@ -4,9 +4,6 @@ import Model from "./Model";
 import Collection from "./Collection";
 
 const Fluent = stampit({
-  init() {
-    this.registerGlobalVariable();
-  },
   properties: {},
   methods: {
     model(...args) {
@@ -69,6 +66,7 @@ const Fluent = stampit({
       LOCAL_CONNECTORS = undefined,
       MERGE_CONNECTORS = undefined
     }) {
+      this.registerGlobalVariable();
       if (typeof window !== "undefined" && window) {
         if (!window._FLUENT_.connectors) {
           window._FLUENT_.connectors = {
