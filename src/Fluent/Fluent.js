@@ -1,9 +1,11 @@
 import stampit from "@stamp/it";
-import compose from "@stamp/compose";
 import Model from "./Model";
 import Collection from "./Collection";
 
 const Fluent = stampit({
+  init() {
+    this.registerGlobalVariable();
+  },
   properties: {},
   methods: {
     model(...args) {
@@ -23,11 +25,17 @@ const Fluent = stampit({
     },
     registerGlobalVariable() {
       if (typeof window !== "undefined" && window && !window._FLUENT_) {
-        window._FLUENT_ = {};
+        window._FLUENT_ = {
+          connectors: {},
+          models: {}
+        };
       }
 
       if (global && !global._FLUENT_) {
-        global._FLUENT_ = {};
+        global._FLUENT_ = {
+          connectors: {},
+          models: {}
+        };
       }
     },
     registerModel(args) {
@@ -36,7 +44,7 @@ const Fluent = stampit({
           ? args[0].properties.name
           : undefined;
 
-      if (!name) {
+      if (!name || name === "baseModel") {
         return;
       }
 
@@ -45,46 +53,35 @@ const Fluent = stampit({
           "You must assign a name to your Model when using Fluent.compose"
         );
       }
-
-      if (window && window._FLUENT_ && !window._FLUENT_.models) {
-        window._FLUENT_.models = {};
+      console.log('----------------------');
+      console.log('args===>', args);
+      console.log('----------------------');
+      
+      if (typeof window !== "undefined") {
+        window._FLUENT_.models[name] = true;
+        return;
       }
-
-      if (global && global._FLUENT_ && !global._FLUENT_.models) {
-        global._FLUENT_.models = {};
-      }
-
-      if (name !== "baseModel") {
-        if (typeof window !== "undefined") {
-          window._FLUENT_.models[name] = true;
-        }
-        global._FLUENT_.models[name] = true;
-      }
+      global._FLUENT_.models[name] = true;
     },
     config({
       REMOTE_CONNECTORS = undefined,
       LOCAL_CONNECTORS = undefined,
       MERGE_CONNECTORS = undefined
     }) {
-      this.registerGlobalVariable();
       if (typeof window !== "undefined" && window) {
-        if (!window._FLUENT_.connectors) {
-          window._FLUENT_.connectors = {
-            local: LOCAL_CONNECTORS,
-            remote: REMOTE_CONNECTORS,
-            merge: MERGE_CONNECTORS
-          };
-        }
+        window._FLUENT_.connectors = {
+          local: LOCAL_CONNECTORS,
+          remote: REMOTE_CONNECTORS,
+          merge: MERGE_CONNECTORS
+        };
       }
 
       if (typeof global !== "undefined" && global) {
-        if (!global._FLUENT_.connectors) {
-          global._FLUENT_.connectors = {
-            local: LOCAL_CONNECTORS,
-            remote: REMOTE_CONNECTORS,
-            merge: MERGE_CONNECTORS
-          };
-        }
+        global._FLUENT_.connectors = {
+          local: LOCAL_CONNECTORS,
+          remote: REMOTE_CONNECTORS,
+          merge: MERGE_CONNECTORS
+        };
       }
     },
     getConfig() {
