@@ -3,9 +3,6 @@ import compose from "@stamp/compose";
 import Model from "./Model";
 import Collection from "./Collection";
 
-var _FLUENT_REMOTE_CONNECTORS,
-  _FLUENT_LOCAL_CONNECTORS,
-  _FLUENT_MERGE_CONNECTORS;
 const Fluent = stampit({
   init() {
     this.registerGlobalVariable();
@@ -28,12 +25,12 @@ const Fluent = stampit({
       return Collection(args);
     },
     registerGlobalVariable() {
-      if (typeof window !== "undefined" && window) {
-        window._FLUENT_ = { ...window._FLUENT_ };
+      if (typeof window !== "undefined" && window && !window._FLUENT_) {
+        window._FLUENT_ = {};
       }
 
-      if (global) {
-        global._FLUENT_ = { ...global._FLUENT_ };
+      if (global && !global._FLUENT_) {
+        global._FLUENT_ = {};
       }
     },
     registerModel(args) {
