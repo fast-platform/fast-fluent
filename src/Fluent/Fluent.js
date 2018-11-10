@@ -53,10 +53,7 @@ const Fluent = stampit({
           "You must assign a name to your Model when using Fluent.compose"
         );
       }
-      console.log('----------------------');
-      console.log('args===>', args);
-      console.log('----------------------');
-      
+
       if (typeof window !== "undefined") {
         window._FLUENT_.models[name] = true;
         return;
