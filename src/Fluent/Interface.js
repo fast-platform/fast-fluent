@@ -113,6 +113,13 @@ export default stampit({
     findAndRemove() {
       throw new Error("findAndRemove() method not implemented");
     },
+    /**
+     * 
+     * @param {*} user 
+     */
+    paginate(perPage, currentPage) {
+      throw new Error("paginate() method not implemented");
+    },
     owner(user) {
       this.chainReference.push({ method: "owner", args: user });
       this.ownerEmail = user;
