@@ -119,7 +119,7 @@ export default stampit({
       })
 
       this.data = result;
-      return this
+      return this;
     },
     concat(array) {
       this.data = [...this.data, ...array];
@@ -155,8 +155,32 @@ export default stampit({
 
       })
     },
+    /**
+     * Returns an array of duplicate submissions, based on an array of keys.
+     * @param {Array} keys - Keys where the function compares an object to evaluate its similarity. 
+     */
+    duplicatesBy(keys) {
+      const data = [...this.data];
+      const duplicates = [];
+
+      data.reduce((object, submission) => {
+        const finalKey = keys.reduce((string, key) =>
+          string + Utilities.getFromPath(submission, key, '').value
+        , '');
+
+        if (object.hasOwnProperty(finalKey)) {
+          duplicates.push(submission);
+        } else {
+          object[finalKey] = true;
+        }
+
+        return object;
+      }, {});
+
+      return duplicates;
+    },
     count() {
-      return this.data.length
+      return this.data.length;
     },
     isFunction(functionToCheck) {
       return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
