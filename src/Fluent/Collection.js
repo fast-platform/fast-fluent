@@ -61,6 +61,44 @@ export default stampit({
         throw new Error('Division between "' + sum + '" and "' + data.length + '" is not valid.');
       }
     },
+    async chunkApply(size, callback) {
+      if (callback === undefined) {
+        throw new Error('Callback function not defined.');
+      }
+
+      const totalSize = this.data.length;
+      let count = 0;
+
+      this.chunks(size);
+
+      // console.log(`Processed ${count}/${totalSize} elements...`);
+
+      /* for (const chunk of this.data) {
+        const promises = [];
+
+        chunk.forEach((element) => {
+          promises.push(callback(element, count));
+          count = count + 1;
+        });
+
+        await Promise.all(promises);
+
+        // count = (count + size) > totalSize ? totalSize : count + size;
+        console.log(`Processed ${count}/${totalSize} elements...`);
+      } */
+
+      const reducer = (chain, batch) =>
+        chain.then(() => Promise.all(batch.map(d => callback(d))))
+          .then(() => {
+            count = (count + size) > totalSize ? totalSize : count + size;
+            console.log(`Processed ${count}/${totalSize} elements...`);
+          });
+
+      console.log(`Processed ${count}/${totalSize} elements...`);
+      const promiseChain = this.data.reduce(reducer, Promise.resolve());
+
+      return promiseChain;
+    },
     /**
      * Chunks the given array
      *
@@ -177,7 +215,9 @@ export default stampit({
         return object;
       }, {});
 
-      return duplicates;
+      this.data = duplicates;
+
+      return this;
     },
     count() {
       return this.data.length;
