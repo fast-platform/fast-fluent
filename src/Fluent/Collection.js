@@ -61,6 +61,44 @@ export default stampit({
         throw new Error('Division between "' + sum + '" and "' + data.length + '" is not valid.');
       }
     },
+    async chunkApply(size, callback) {
+      if (callback === undefined) {
+        throw new Error('Callback function not defined.');
+      }
+
+      const totalSize = this.data.length;
+      let count = 0;
+
+      this.chunks(size);
+
+      // console.log(`Processed ${count}/${totalSize} elements...`);
+
+      /* for (const chunk of this.data) {
+        const promises = [];
+
+        chunk.forEach((element) => {
+          promises.push(callback(element, count));
+          count = count + 1;
+        });
+
+        await Promise.all(promises);
+
+        // count = (count + size) > totalSize ? totalSize : count + size;
+        console.log(`Processed ${count}/${totalSize} elements...`);
+      } */
+
+      const reducer = (chain, batch) =>
+        chain.then(() => Promise.all(batch.map(d => callback(d))))
+          .then(() => {
+            count = (count + size) > totalSize ? totalSize : count + size;
+            console.log(`Processed ${count}/${totalSize} elements...`);
+          });
+
+      console.log(`Processed ${count}/${totalSize} elements...`);
+      const promiseChain = this.data.reduce(reducer, Promise.resolve());
+
+      return promiseChain;
+    },
     /**
      * Chunks the given array
      *
@@ -119,7 +157,7 @@ export default stampit({
       })
 
       this.data = result;
-      return this
+      return this;
     },
     concat(array) {
       this.data = [...this.data, ...array];
@@ -155,8 +193,34 @@ export default stampit({
 
       })
     },
+    /**
+     * Returns an array of duplicate submissions, based on an array of keys.
+     * @param {Array} keys - Keys where the function compares an object to evaluate its similarity. 
+     */
+    duplicatesBy(keys) {
+      const data = [...this.data];
+      const duplicates = [];
+
+      data.reduce((object, submission) => {
+        const finalKey = keys.reduce((string, key) =>
+          string + Utilities.getFromPath(submission, key, '').value
+        , '');
+
+        if (object.hasOwnProperty(finalKey)) {
+          duplicates.push(submission);
+        } else {
+          object[finalKey] = true;
+        }
+
+        return object;
+      }, {});
+
+      this.data = duplicates;
+
+      return this;
+    },
     count() {
-      return this.data.length
+      return this.data.length;
     },
     isFunction(functionToCheck) {
       return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
